@@ -8,7 +8,7 @@
 namespace mirocow\cron;
 
 use Yii;
-yii\widgets\InputWidget; 
+use yii\widgets\InputWidget; 
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
