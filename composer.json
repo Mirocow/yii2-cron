@@ -1,0 +1,33 @@
+{
+  "name": "mirocow/yii2-cron",
+  "description": "Yii 2 cron widgets",
+  "keywords": [
+    "yii",
+    "yii2",
+    "cron",
+    "widget"
+  ],
+  "type": "yii2-extension",
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/Mirocow/yii2-cron/issues?state=open",
+    "wiki": "http://www.yiidoc.com/wiki/",
+    "source": "https://github.com/Mirocow/yii2-cron"
+  },
+  "authors": [
+    {
+      "name": "Mirocow",
+      "email": "mr.mirocow@gmail.com",
+      "homepage": "http://www.mirocow.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "yiisoft/yii2": "*"
+  },
+  "autoload": {
+    "psr-0": {
+      "mirocow\\cron\\": "src"
+    }
+  }
+}
