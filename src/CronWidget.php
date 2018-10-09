@@ -21,9 +21,6 @@ use yii\helpers\Url;
 class CronWidget extends InputWidget
 {
     /** @var string */
-    public static $componentId = 'cron-widget';
-
-    /** @var string */
     public $tagName = 'div';
 
     /** @var string */
@@ -35,7 +32,7 @@ class CronWidget extends InputWidget
     );
 
     /** @var string  */
-    public $initial = '42 3 * * 5';
+    public $initial = '* * * * *';
 
     /** @var array  */
     public $customValues = 'undefined';
@@ -45,8 +42,14 @@ class CronWidget extends InputWidget
      */
     public function run() {
         parent::run();
+        $this->htmlOptions['id'] = $this->id;
+        Html::addCssClass($this->htmlOptions, 'form-control');
         echo Html::tag($this->tagName, '', $this->htmlOptions);
-        echo Html::hiddenInput($this->tagInputName, $this->initial);
+        if ($this->hasModel()) {
+            echo Html::activeHiddenInput($this->model, $this->tagInputName);
+        } else {
+            echo Html::hiddenInput($this->tagInputName, $this->initial);
+        }
         $this->registerAssets();
     }
 
@@ -57,11 +60,16 @@ class CronWidget extends InputWidget
     {
         $view = $this->getView();
         CronAsset::register($view);
+        if ($this->hasModel()) {
+            $attributeId = Html::getInputId($this->model, $this->tagInputName);
+        } else {
+            $attributeId = $this->tagInputName;
+        }
         $js =<<<JS
-        $('{$this->componentId}').cron({
+        $('#{$this->id}').cron({
             initial: "{$this->initial}",
             onChange: function() {
-                $('{$this->tagInputName}').text($(this).cron("value"));
+                $('{$attributeId}').text($(this).cron("value"));
             },
             customValues: {$this->customValues()}   
         });
