@@ -62,7 +62,7 @@ class CronWidget extends InputWidget
         CronAsset::register($view);
         if ($this->hasModel()) {
             $attributeId = Html::getInputId($this->model, $this->tagInputName);
-            $value = $this->model->value;
+            $value = Html::getAttributeValue($this->model, $this->tagInputName);
         } else {
             $attributeId = $this->tagInputName;
         }
