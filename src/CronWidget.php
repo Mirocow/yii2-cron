@@ -32,7 +32,7 @@ class CronWidget extends InputWidget
     );
 
     /** @var string  */
-    public $initial = '* * * * *';
+    public $value = '* * * * *';
 
     /** @var array  */
     public $customValues = 'undefined';
@@ -62,12 +62,16 @@ class CronWidget extends InputWidget
         CronAsset::register($view);
         if ($this->hasModel()) {
             $attributeId = Html::getInputId($this->model, $this->tagInputName);
+            $value = $this->model->value;
         } else {
             $attributeId = $this->tagInputName;
         }
+        if(!$value){
+            $value = $this->value;
+        }
         $js =<<<JS
         $('#{$this->id}').cron({
-            initial: "{$this->initial}",
+            initial: "{$value}",
             onChange: function() {
                 $('{$attributeId}').text($(this).cron("value"));
             },
