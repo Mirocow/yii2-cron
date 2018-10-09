@@ -8,7 +8,7 @@
 namespace mirocow\cron;
 
 use Yii;
-use yii\base\Widget;
+yii\widgets\InputWidget; 
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -18,7 +18,7 @@ use yii\helpers\Url;
  * Class CronWidget
  * @package mirocow\cron
  */
-class CronWidget extends Widget
+class CronWidget extends InputWidget
 {
     /** @var string */
     public static $componentId = 'cron-widget';
