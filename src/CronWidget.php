@@ -37,6 +37,9 @@ class CronWidget extends InputWidget
     /** @var array  */
     public $customValues = 'undefined';
 
+    /** @var string  */
+    public $language = 'en';
+
     /**
      * Run widget.
      */
@@ -69,13 +72,18 @@ class CronWidget extends InputWidget
         if(!$value){
             $value = $this->value;
         }
+        $dictionaries = json_encode([$this->language => require __DIR__ . "/messages/{$this->language}/dict.php"], JSON_FORCE_OBJECT);
         $js =<<<JS
+        var dict = {$dictionaries};
+        $.tr.dictionary(dict);
+        $.tr.language('{$this->language}');
         $('#{$this->id}').cron({
             initial: "{$value}",
             onChange: function() {
                 $('{$attributeId}').text($(this).cron("value"));
             },
-            customValues: {$this->customValues()}   
+            customValues: {$this->customValues()},
+            tr: $.tr.translator(), 
         });
 JS;
         $view->registerJs($js);

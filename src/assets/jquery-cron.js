@@ -40,108 +40,10 @@
 
     var defaults = {
         initial : "* * * * *",
-        minuteOpts : {
-            minWidth  : 100, // only applies if columns and itemWidth not set
-            itemWidth : 30,
-            columns   : 4,
-            rows      : undefined,
-            title     : "Minutes Past the Hour"
-        },
-        timeHourOpts : {
-            minWidth  : 100, // only applies if columns and itemWidth not set
-            itemWidth : 20,
-            columns   : 2,
-            rows      : undefined,
-            title     : "Time: Hour"
-        },
-        domOpts : {
-            minWidth  : 100, // only applies if columns and itemWidth not set
-            itemWidth : 30,
-            columns   : undefined,
-            rows      : 10,
-            title     : "Day of Month"
-        },
-        monthOpts : {
-            minWidth  : 100, // only applies if columns and itemWidth not set
-            itemWidth : 100,
-            columns   : 2,
-            rows      : undefined,
-            title     : undefined
-        },
-        dowOpts : {
-            minWidth  : 100, // only applies if columns and itemWidth not set
-            itemWidth : undefined,
-            columns   : undefined,
-            rows      : undefined,
-            title     : undefined
-        },
-        timeMinuteOpts : {
-            minWidth  : 100, // only applies if columns and itemWidth not set
-            itemWidth : 20,
-            columns   : 4,
-            rows      : undefined,
-            title     : "Time: Minute"
-        },
-        effectOpts : {
-            openSpeed      : 400,
-            closeSpeed     : 400,
-            openEffect     : "slide",
-            closeEffect    : "slide",
-            hideOnMouseOut : true
-        },
         customValues : undefined,
-        onChange: undefined // callback function each time value changes
+        onChange: undefined, // callback function each time value changes
+        tr: undefined
     };
-
-    // -------  build some static data -------
-
-    // options for minutes in an hour
-    var str_opt_mih = "";
-    for (var i = 0; i < 60; i++) {
-        var j = (i < 10)? "0":"";
-        str_opt_mih += "<option value='"+i+"'>" + j +  i + "</option>\n";
-    }
-
-    // options for hours in a day
-    var str_opt_hid = "";
-    for (var i = 0; i < 24; i++) {
-        var j = (i < 10)? "0":"";
-        str_opt_hid += "<option value='"+i+"'>" + j + i + "</option>\n";
-    }
-
-    // options for days of month
-    var str_opt_dom = "";
-    for (var i = 1; i < 32; i++) {
-        if (i == 1 || i == 21 || i == 31) { var suffix = "st"; }
-        else if (i == 2 || i == 22) { var suffix = "nd"; }
-        else if (i == 3 || i == 23) { var suffix = "rd"; }
-        else { var suffix = "th"; }
-        str_opt_dom += "<option value='"+i+"'>" + i + suffix + "</option>\n";
-    }
-
-    // options for months
-    var str_opt_month = "";
-    var months = ["January", "February", "March", "April",
-                  "May", "June", "July", "August",
-                  "September", "October", "November", "December"];
-    for (var i = 0; i < months.length; i++) {
-        str_opt_month += "<option value='"+(i+1)+"'>" + months[i] + "</option>\n";
-    }
-
-    // options for day of week
-    var str_opt_dow = "";
-    var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
-                "Friday", "Saturday"];
-    for (var i = 0; i < days.length; i++) {
-        str_opt_dow += "<option value='"+i+"'>" + days[i] + "</option>\n";
-    }
-
-    // options for period
-    var str_opt_period = "";
-    var periods = ["minute", "hour", "day", "week", "month", "year"];
-    for (var i = 0; i < periods.length; i++) {
-        str_opt_period += "<option value='"+periods[i]+"'>" + periods[i] + "</option>\n";
-    }
 
     // display matrix
     var toDisplay = {
@@ -163,6 +65,7 @@
     };
 
     // ------------------ internal functions ---------------
+
     function defined(obj) {
         if (typeof obj == "undefined") { return false; }
         else { return true; }
@@ -281,14 +184,56 @@
             var options = opts ? opts : {}; /* default to empty obj */
             var o = $.extend([], defaults, options);
             var eo = $.extend({}, defaults.effectOpts, options.effectOpts);
-            $.extend(o, {
-                minuteOpts     : $.extend({}, defaults.minuteOpts, eo, options.minuteOpts),
-                domOpts        : $.extend({}, defaults.domOpts, eo, options.domOpts),
-                monthOpts      : $.extend({}, defaults.monthOpts, eo, options.monthOpts),
-                dowOpts        : $.extend({}, defaults.dowOpts, eo, options.dowOpts),
-                timeHourOpts   : $.extend({}, defaults.timeHourOpts, eo, options.timeHourOpts),
-                timeMinuteOpts : $.extend({}, defaults.timeMinuteOpts, eo, options.timeMinuteOpts)
-            });
+
+            // -------  build some static data -------
+
+            // options for minutes in an hour
+            var str_opt_mih = "";
+            for (var i = 0; i < 60; i++) {
+                var j = (i < 10)? "0":"";
+                str_opt_mih += "<option value='"+i+"'>" + j +  i + "</option>\n";
+            }
+
+            // options for hours in a day
+            var str_opt_hid = "";
+            for (var i = 0; i < 24; i++) {
+                var j = (i < 10)? "0":"";
+                str_opt_hid += "<option value='"+i+"'>" + j + i + "</option>\n";
+            }
+
+            // options for days of month
+            var str_opt_dom = "";
+            for (var i = 1; i < 32; i++) {
+                if (i == 1 || i == 21 || i == 31) { var suffix = "st"; }
+                else if (i == 2 || i == 22) { var suffix = "nd"; }
+                else if (i == 3 || i == 23) { var suffix = "rd"; }
+                else { var suffix = "th"; }
+                str_opt_dom += "<option value='"+i+"'>" + i + suffix + "</option>\n";
+            }
+
+            // options for months
+            var str_opt_month = "";
+            var months = ["January", "February", "March", "April",
+                "May", "June", "July", "August",
+                "September", "October", "November", "December"];
+            for (var i = 0; i < months.length; i++) {
+                str_opt_month += "<option value='"+(i+1)+"'>" + o.tr(months[i]) + "</option>\n";
+            }
+
+            // options for day of week
+            var str_opt_dow = "";
+            var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+                "Friday", "Saturday"];
+            for (var i = 0; i < days.length; i++) {
+                str_opt_dow += "<option value='"+i+"'>" + o.tr(days[i]) + "</option>\n";
+            }
+
+            // options for period
+            var str_opt_period = "";
+            var periods = ["minute", "hour", "day", "week", "month", "year"];
+            for (var i = 0; i < periods.length; i++) {
+                str_opt_period += "<option value='"+periods[i]+"'>" + o.tr(periods[i]) + "</option>\n";
+            }
 
             // error checking
             if (hasError(this, o)) { return this; }
@@ -303,7 +248,7 @@
             }
 
             block["period"] = $("<span class='cron-period'>"
-                    + "Every <select name='cron-period'>" + custom_periods
+                    + o.tr('Every') + " <select name='cron-period'>" + custom_periods
                     + str_opt_period + "</select> </span>")
                 .appendTo(this)
                 .data("root", this);
@@ -312,8 +257,8 @@
             select.bind("change.cron", event_handlers.periodChanged)
                   .data("root", this);
 
-            block["dom"] = $("<span class='cron-block cron-block-dom'>"
-                    + " on the <select name='cron-dom'>" + str_opt_dom
+            block["dom"] = $("<span class='cron-block cron-block-dom'> "
+                + o.tr('on the') + " <select name='cron-dom'>" + str_opt_dom
                     + "</select> </span>")
                 .appendTo(this)
                 .data("root", this);
@@ -321,31 +266,31 @@
             select = block["dom"].find("select").data("root", this);
 
             block["month"] = $("<span class='cron-block cron-block-month'>"
-                    + " of <select name='cron-month'>" + str_opt_month
+                    + o.tr('of') + " <select name='cron-month'>" + str_opt_month
                     + "</select> </span>")
                 .appendTo(this)
                 .data("root", this);
 
             select = block["month"].find("select").data("root", this);
 
-            block["mins"] = $("<span class='cron-block cron-block-mins'>"
-                    + " at <select name='cron-mins'>" + str_opt_mih
-                    + "</select> minutes past the hour </span>")
+            block["mins"] = $("<span class='cron-block cron-block-mins'> "
+                + o.tr('at') + " <select name='cron-mins'>" + str_opt_mih
+                    + "</select> " + o.tr('minutes past the hour') + " </span>")
                 .appendTo(this)
                 .data("root", this);
 
             select = block["mins"].find("select").data("root", this);
 
-            block["dow"] = $("<span class='cron-block cron-block-dow'>"
-                    + " on <select name='cron-dow'>" + str_opt_dow
+            block["dow"] = $("<span class='cron-block cron-block-dow'> "
+                    + o.tr('on') + " <select name='cron-dow'>" + str_opt_dow
                     + "</select> </span>")
                 .appendTo(this)
                 .data("root", this);
 
             select = block["dow"].find("select").data("root", this);
 
-            block["time"] = $("<span class='cron-block cron-block-time'>"
-                    + " at <select name='cron-time-hour' class='cron-time-hour'>" + str_opt_hid
+            block["time"] = $("<span class='cron-block cron-block-time'> "
+                    + o.tr('at') + " <select name='cron-time-hour' class='cron-time-hour'>" + str_opt_hid
                     + "</select>:<select name='cron-time-min' class='cron-time-min'>" + str_opt_mih
                     + " </span>")
                 .appendTo(this)

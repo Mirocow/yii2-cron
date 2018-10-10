@@ -24,6 +24,7 @@ class CronAsset extends AssetBundle
     ];
 
     public $js = [
+        'jquery.tr.js',
         'jquery-cron.js',
     ];
 
