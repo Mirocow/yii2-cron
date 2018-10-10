@@ -80,7 +80,7 @@ class CronWidget extends InputWidget
         $('#{$this->id}').cron({
             initial: "{$value}",
             onChange: function() {
-                $('{$attributeId}').text($(this).cron("value"));
+                $('#{$attributeId}').val($(this).cron("value"));
             },
             customValues: {$this->customValues()},
             tr: $.tr.translator(), 
